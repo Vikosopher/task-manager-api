@@ -1,0 +1,33 @@
+# docker-compose.yml
+
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: mongodb_task_app
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    restart: unless-stopped
+
+  elasticsearch:
+    image: elasticsearch:8.9.0 # Using a specific, stable version
+    container_name: elasticsearch_task_app
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false # Disabling security for local dev ease
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
+  es_data:
